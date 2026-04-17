@@ -1,152 +1,215 @@
 #include <iostream>
 #include <vector>
-#include <climits>
+#include <queue>
+
 using namespace std;
 
 class Node{
 public:
     int val;
-
     Node* left;
     Node* right;
 
-    Node(int d){
-        val = d;
+    Node(int val){
+        this->val = val;
         left = right = nullptr;
     }
 };
-Node* insert(Node* root , int val){
-    if(root == nullptr){
-        return new Node(val);
-    }else if(root->val < val){
-        root->right = insert(root->right, val);
-    }else{
-        root->left = insert(root->left, val);
+
+static int idx = -1;
+Node* buildTree(vector<int> nodes){
+    idx++;
+    if(nodes[idx] == -1){
+        return nullptr;
     }
 
-    return root;
-}
-Node* buildBST(vector<int> nodes){
-    Node* root = nullptr;
+    Node* newNode = new Node(nodes[idx]);
+    newNode->left = buildTree(nodes);
+    newNode->right = buildTree(nodes);
 
-    for(int c : nodes){
-        root = insert(root, c);
-    }
-    return root;
-
+    return newNode;
 }
 
+// Preorder
+void preorder(Node* root){
+    if(!root ) return;
+
+    cout << root->val<<" ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+// Inorder
 void inorder(Node* root){
     if(!root) return ;
 
     inorder(root->left);
-    cout << root->val << " ";
+    cout << root->val <<" ";
     inorder(root->right);
 }
 
-// Validate BST 
-bool helper(Node* root, Node* min, Node* max){
-    if(!root) return true;
+// Postorder
+void postorder(Node* root){
+    if(!root) return ;
 
-    if(min != nullptr && min->val >= root->val){
-        return false;
-    }
-
-    if(max != nullptr && max->val <= root->val) return false;
-
-    return helper(root->left, min, root)
-            && helper(root->right, root, max);
+    postorder(root->left);
+    postorder(root->right);
+    cout << root->val << " ";
 }
 
-bool validateBST(Node* root){
-    if(!root) return true;
-    Node* min = nullptr;
-    Node* max = nullptr;
-    return helper(root, min, max);
-}
-
-
-//  Minimum difference between the nodes of the BST
-
-Node* previous = nullptr;
-
-int minDiff(Node* root){
-
+void printAllPaths(Node* root, string path,  vector<string> &ans){
     
-    if(root == nullptr){
-        return INT_MAX;
-    }
-    int ans = INT_MAX;
-
-    if(root->left != nullptr){
-        int leftMin = minDiff(root->left);
-        ans = min(ans, leftMin);
-
+    if(root->left == nullptr && root->right == nullptr) {
+       ans.push_back(path);
+        return;
     }
 
-    if(previous != nullptr){
-        ans = min(ans,root->val - previous->val);
-
-    }
-
-    previous  = root;
-
-    if(root->right != nullptr){
-        int rightMin = minDiff(root->right);
-
-        ans = min(rightMin, ans);
-    }
-    return ans;
+    if(root->left) printAllPaths(root->left, path + to_string(root->val), ans);
+    if(root->right) printAllPaths(root->right, path + to_string(root->val), ans);
 }
 
-// Kth Smallest in BST
-int prevOrder = 0;
-int KthSmallest(Node* root, int k){
-    if(!root) return -1;
+// level Order Traversal Normal
+void levelOrderTraversal(Node* root){
+    queue<Node*> q;
 
-    if(root->left != nullptr){
-        int leftAns = KthSmallest(root->left, k);
-        return leftAns;
+    q.push(root);
+
+    while(!q.empty()){
+        Node* curr = q.front();
+        cout << curr->val;
+        q.pop();
+
+        if(curr->left) q.push(curr->left);
+        if(curr->right) q.push(curr->right);
     }
-
-    if(prevOrder + 1 == k){
-        return root->val;
-    }
-
-    prevOrder += 1;
-
-    if(root->right != nullptr){
-        int rightAns = KthSmallest(root->right, k);
-        return rightAns;
-    }
-
-    return -1;
 }
 
+// Level order traversal level wise print using null pointer as a delimiter
+void levelOrderTraversalLevelWise1(Node* root){
+    queue<Node*> q;
 
-// LCA in BST
+    q.push(root);
+    q.push(nullptr);
 
-Node* LCAInBST(Node* root, Node* p, Node* q){
-    if(!root ) return nullptr;
+    while(!q.empty()){
+        Node* curr = q.front();
+        q.pop();
+        if(curr == nullptr){
+            if(q.empty()){
+                break;
+            }else{
+                cout << endl;
+                q.push(nullptr);
 
-    if(root->val > p->val && root->val < q->val){
-        return LCAInBST(root->left, p, q);
-    }else if(root->val < p->val && root->val < q->val){
-        return LCAInBST(root->right, p, q);
-    }else{
-        return root;
+            }
+        }else{ // curr != null
+        
+        cout << curr->val << " ";
+        if(curr->left) q.push(curr->left);
+        if(curr->right) q.push(curr->right);
+        }
+    }
+}
+
+// level Order Traversal usign for loop
+void levelOrderTraversalLevelWise2(Node* root){
+    queue<Node*> q;
+
+    q.push(root);
+
+    while(!q.empty()){
+        int n = q.size();
+        
+        for(int i=0; i<n; i++){
+            Node* curr = q.front();
+            cout << curr->val << " ";
+            q.pop();
+
+            if(curr->left) q.push(curr->left);
+            if(curr->right) q.push(curr->right);
+        }
+   }
+}
+
+// height of the binary tree recursive
+int heightBinaryTree(Node* root){
+    if(!root) return 0;
+
+    int leftHeight = heightBinaryTree(root->left);
+    int rightHeight = heightBinaryTree(root->right);
+
+    return max(leftHeight, rightHeight) + 1 ;
+}
+
+// count number of nodes
+
+int countNodes(Node* root){
+    if(!root) return 0;
+
+    int leftCount = countNodes(root->left);
+    int rightCount = countNodes(root->right);
+
+    return leftCount + rightCount + 1;
+}
+
+// check the tree are identical or not
+bool isIdentical(Node* p, Node* q){
+    if(p == nullptr || q == nullptr) return p == q;
+
+    return isIdentical(p->left, q->left)
+            && isIdentical(p->right, q->right)
+            && p->val == q->val;
+}
+
+int sumNodes(Node* root){
+    if(!root) return 0;
+    
+    return sumNodes(root->left) + sumNodes(root->right) + root->val;
+}
+
+// Diameter of the Binary Tree
+int dia = 0;
+
+int diamter(Node* root){
+    if(!root) return 0;
+    int leftHeight = diameter(root->left);
+    int rightHeight = diameter(root-right);
+    ans = max(ans, leftHeight+rightHeight);
+    return  ans;
+}
+
+// diameter of a binary tree using pair
+pair<int, int> diam(Node* root){
+    if(root == nullptr) return {0,0};
+    pair<int, int> leftInfo = diam(root->left);
+    pair<int, int> rightInfo = diam(root->right);
+
+    int currDiam = leftInfo.second + rightInfo.second;
+    int finalDiam = max(currDiam, leftInfo.first+rightInfo.first);
+    int finalHeight = max(leftInfo.first , rightInfo.first) + 1;
+
+    return {finalDiam, finalHeight};
+}
+
+// Subtree of another tree
+
+bool isSubTree(Node* root, Node* subRoot){
+    if(root == nullptr || subRoot == nullptr) return root == subRoot;
+
+    if(root->val == subRoot->val && isIdentical(root, subRoot)){
+        return true;
     }
 
+    return isSubTree(root->left, subRoot->left)
+            || isSubTree(root->right, subRoot-right);
 }
 int main(){
-    vector<int> nodes = {1, 2, 6 ,4,3 , 45, 323};
+    vector<int> nodes = {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1};
 
-    Node* root = buildBST(nodes);
+    Node* root = buildTree(nodes);
 
-    inorder(root);
+    cout << heightBinaryTree(root);
+    cout << endl;
 
-    // cout << validateBST(root);
-
-    cout << KthSmallest(root, 3);
     return 0;
 }
