@@ -1,81 +1,53 @@
+// without using extra space for visited matrix
+// TC O(4 to the power n square)
+
+// we have n square cells and for each cell we have 4 options
 #include <iostream>
-#include <vector>
 #include <string>
-#include <list>
-#include <queue>
+#include <vector>
+
 using namespace std;
 
-class Graph{
-public:
-    int V;
-    list<int>* l;
-    bool  isUndir;
-
-
-    Graph(int V, bool isUndir = true){
-        this->V = V;
-        this->isUndir = isUndir;
-        l = new list<int> [V];
+void helper(vector<vector<int>> &mat, int row, int col, vector<string> &ans, string path){
+    int n = mat.size();
+    if(row < 0 || col < 0 || row >= n || col >= n || mat[row][col] == 0||mat[row][col] == -1){
+        return ;
     }
 
-
-    void addEdge(int u, int v){
-        
-        l[u].push_back(v);
-        
-        if(isUndir)  l[v].push_back(u);
+    if(row == n-1 && col == n-1){
+        ans.push_back(path);
+        return;
     }
 
-    void print(){
-        
-        for(int i=0; i<V; ++i){
-            cout << i << "->";
-            for(int x : l[i]){
-                cout << x <<" ";
-            } 
-            cout << endl;
-        }
-    }
+    mat[row][col]=-1; // visit
 
-    bool isCycleDirHelperDFS(int src, vector<bool> &vis, vector<bool> &recPath){
-        vis[src]=true;
-        recPath[src]=true;
+    helper(mat, row-1, col, ans, path+"U");
+    helper(mat, row+1, col, ans, path + "D");
+    helper(mat, row, col+1, ans, path+"R");
+    helper(mat, row, col-1, ans, path+"L");
 
-        for(int v : l[src]){
-            if(!vis[v]){
-                if(isCycleDirHelperDFS(v, vis, recPath)) return true;
-            }else if(recPath[v]) // visited hai aur recursion path me bhi hai => cycle exists
-                return true;
-        }
+    mat[row][col] = 1; // unvisit
+    // backtrack taki agar kisi aur path ki wajah se true hojaye toh use wapas use false 
 
-        recPath[src]=false;
-        return false;
-    }
-    bool isCycleDirDFS(){
-        int src = 0;
-        vector<bool> vis(V, false);
-        vector<bool> recPath(V, false);
+}
+vector<string> findPath(vector<vector<int>> &mat){
+    int n = mat.size();
+    
+    vector<string> ans;
+    string path = "";
 
-        for(int i=0; i<V; i++){
-            if(!vis[i]){
-                if(isCycleDirHelperDFS(i, vis, recPath)) return true;
-            }
-        }
-        return false;
-    }
+    helper(mat, 0, 0, ans, path);
 
-};
-
-
-
+    return ans;
+}
 int main(){
-    Graph g(4, false);
+    vector<vector<int>> mat = {{1, 0, 0, 0}, {1, 1, 0, 1}, {1, 1, 0, 0}, {0, 1, 1, 1}};
+    vector<string> ans=findPath(mat);
+    
+    for(string s : ans){
+        cout << s << "\n";
+    }
 
-    g.addEdge(1, 0);
-    g.addEdge(0, 2);
-    g.addEdge(2, 3);
-    g.addEdge(3, 0);
-   
-    cout << g.isCycleDirDFS();
-    return 0;
+    cout << endl;
+    return 0;   
 }
