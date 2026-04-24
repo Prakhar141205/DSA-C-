@@ -41,3 +41,12 @@ int main(){
     cout << endl;
     return 0;
 }
+
+
+/*
+Even though pivot and nums[end] 
+have the same value, pivot is just a separate variable,
+ not part of the array. Swapping with pivot only changes that variable 
+ and not the array’s structure. To correctly place the pivot in the array, 
+ you must swap using nums[end], which represents the actual element inside the array.
+ */
