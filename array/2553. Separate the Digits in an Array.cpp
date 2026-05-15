@@ -30,3 +30,20 @@ public:
        return ans;
     }
 };
+
+class Solution {
+public:
+    vector<int> separateDigits(vector<int>& nums) {
+        vector<int> result;
+        for(int num:nums){
+            vector<int> digits;
+            while(num>0){
+            digits.push_back(num%10);
+            num/=10;
+        }
+        reverse(digits.begin(), digits.end());
+        result.insert(result.end(), digits.begin(), digits.end());
+    }
+    return result;
+    }
+};
