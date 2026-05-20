@@ -1,66 +1,40 @@
-/*vector<int> vec {nums.begin(), nums.end()}*/
-
 #include <iostream>
 #include <vector>
 #include <string>
+#include <bit>
 
-using namespace std;
+class Solution {
 
-const int mod = 1e9 + 7;
+    public:
+    std::vector<int> findThePrefixCommonArray(std::vector<int>& A, std::vector<int>& B) {
+        int n = A.size();
+        std::vector<int> ans;
+        unsigned long long maskA = 0;
+        unsigned long long maskB = 0;
 
-// using prefix array 
-int numOfSub(vector<int> nums){
-    int n = nums.size();
-    vector<int> prefix;
-    prefix[0] = nums[0];
-    for(int i=1; i<n; i++){
-        prefix[i] = prefix[i-1] + nums[i];
-    }
+        int commoncnt = 0;
+        for(int i=0; i<n; i++){
+            maskA |= (1L << A[i]);
 
-    int count=0; 
-    int even = 1; // to overcome the corner cases 
-    int odd = 0;
+            maskB |= (1L << B[i]);
 
-    for(int i=0; i<n; i++){
-        if(nums[i] % 2 == 0){
-            count = (count + odd) % mod;
-            even++;
-        }else{
-            count = (count+even)%mod;
-            odd++;
+            ans.push_back(std::popcount(maskA & maskB));
         }
-    }
-    return count;
-}
 
-// without prefix array
-int numOfSub(vector<int> nums){
-    int n = nums.size();
-    vector<int> prefix;
-    prefix[0] = nums[0];
-    for(int i=1; i<n; i++){
-        prefix[i] = prefix[i-1] + nums[i];
+        return ans;
     }
-
-    int count=0; 
-    int even = 1; /*to overcome the corner cases  because 0 is also an even sum 
-    => it is including the subarray with single element */
-    int odd = 0;
-    int sum=0;
-    for(int i=0; i<n; i++){
-        sum += nums[i];
-        if(sum % 2 == 0){
-            count = (count + odd) % mod;
-            even++;
-        }else{
-            count = (count+even)%mod;
-            odd++;
-        }
-    }
-    return count;
-}
+};
 int main(){
 
-    return 0;
+    std::vector<int> a = {1, 2, 3, 4};
+    std::vector<int> b = {2, 1, 4, 3};
 
+    Solution sol;
+    std::vector<int> ans = sol.findThePrefixCommonArray(a, b);
+
+    for(int x : ans){
+        std::cout << x << " ";
+    }
+
+    return 0;
 }
