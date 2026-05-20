@@ -1,3 +1,4 @@
+// using the frequency means if the frequency is 2 means it is available in both the arrays
 
 class Solution {
 public:
