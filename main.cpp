@@ -1,40 +1,21 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <bit>
+bool sieve(int n){
+    bool arr[n+1];
 
-class Solution {
+    std::fill(arr, arr+n+1, true);
 
-    public:
-    std::vector<int> findThePrefixCommonArray(std::vector<int>& A, std::vector<int>& B) {
-        int n = A.size();
-        std::vector<int> ans;
-        unsigned long long maskA = 0;
-        unsigned long long maskB = 0;
-
-        int commoncnt = 0;
-        for(int i=0; i<n; i++){
-            maskA |= (1L << A[i]);
-
-            maskB |= (1L << B[i]);
-
-            ans.push_back(std::popcount(maskA & maskB));
+    for(int p=2; p*p <= n; p++){
+        if(arr[p]){
+            for(int i=p*p; i<=n; i+=p){
+                arr[i]=false;
+            }
         }
-
-        return ans;
     }
-};
+    return arr[n];
+}
 int main(){
-
-    std::vector<int> a = {1, 2, 3, 4};
-    std::vector<int> b = {2, 1, 4, 3};
-
-    Solution sol;
-    std::vector<int> ans = sol.findThePrefixCommonArray(a, b);
-
-    for(int x : ans){
-        std::cout << x << " ";
-    }
-
+    int n = 15;
+    std::cout << sieve(n);
     return 0;
 }
