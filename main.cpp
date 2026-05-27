@@ -1,21 +1,29 @@
 #include <iostream>
+#include <string>
 #include <vector>
-bool sieve(int n){
-    bool arr[n+1];
 
-    std::fill(arr, arr+n+1, true);
+void reverseArray(int* arr, int n, int i){
+    if( i >= n) return ;
 
-    for(int p=2; p*p <= n; p++){
-        if(arr[p]){
-            for(int i=p*p; i<=n; i+=p){
-                arr[i]=false;
-            }
-        }
+    std::swap(arr[n], arr[i]);
+    reverseArray(arr, n-1, i+1);
+}
+
+void printFib(int n){
+    
+    std:: cout << 0 << " " << 1 << " ";
+    int p=0;
+    int pp=1;
+
+    for(int i=2; i<=n; i++){
+        int curr = p + pp;
+        std::cout << curr << " ";
+        p = pp;
+        pp = curr;
     }
-    return arr[n];
 }
 int main(){
-    int n = 15;
-    std::cout << sieve(n);
+    int n  = 5;
+    printFib(n);
     return 0;
 }
