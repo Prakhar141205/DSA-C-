@@ -58,3 +58,19 @@ public:
         return cnt;
     }
 };
+
+class Solution {
+public:
+    int numberOfSpecialChars(string word) {
+        static int mp[125] {};
+        memset(mp, 0, sizeof(mp));
+        for(int i = 0, n = word.size(); i < n; i++)
+            if(islower(word[i]) || !mp[word[i]])
+                mp[word[i]] = i + 1;
+        int ans = 0;
+        for(char ch = 'a'; ch <= 'z'; ch++) {
+            if(mp[ch] && mp[toupper(ch)] > mp[ch]) ans++;
+        }
+        return ans;
+    }
+};
