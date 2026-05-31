@@ -21,7 +21,7 @@ int main() {
 int main() {
     int num = 12345;
     std::vector<int> prefixes;
-
+list<int>
     // Remove one digit at a time to get prefixes
     while (num > 0) {
         prefixes.push_back(num);
