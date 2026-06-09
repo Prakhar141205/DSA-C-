@@ -3,16 +3,17 @@
 #include <vector>
 using namespace std;
 
-int getMaxLenSub(string s1, string s2, int cnt){
+int getMaxLenSub(string s1, string s2){
     int n = s1.length();
     int m = s2.length();
 
-    if(n == 0 || m == 0) return cnt;
+    if(n == 0 || m == 0) return 0;
 
 
     if(s1[n-1] == s2[m-1]) 
-        return getMaxLenSub(s1.substr(0, n-1), s2.substr(0, m-1), cnt+1);
-    return cnt;
+        return 1 + getMaxLenSub(s1.substr(0, n-1), s2.substr(0, m-1));
+    else return 0;
+    
 }
 
 // Memoization
@@ -52,11 +53,10 @@ int getMaxLenSubTab(string s1, string s2){
 
 int main(){
     string s1 = "abcde";
-    string s2 = "abcdf";
+    string s2 = "adf";
     // vector<vector<int>> dp(s1.size()+1, vector<int> (s2.size()+1, -1));
-    int cnt=0;
-     ;
-    cout << "Max Length = "<< getMaxLenSub(s1, s2, 0) << "\n";
+
+    cout << "Max Length = "<< getMaxLenSub(s1, s2) << "\n";
     return 0;
 
 }
