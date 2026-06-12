@@ -33,19 +33,19 @@ void fastIO() {
 // -------------------- Solve --------------------
 void solve() {
     
-    
 }
 
 // -------------------- Main --------------------
 int main() {
     fastIO();
 
-    int T = 1;
-    cin >> T;
+    int n, k, l, c, d, p, np, nl;
+    cin >> n >> k >> l >> c >>     d >> p >> nl >> np;
 
-    while (T--) {
-        solve();
-    }
+    int nToast = (k*l/nl);
+    int noOfSLices = c*d;
 
+
+    cout << min({nToast, noOfSLices, p/np})/n << "\n";
     return 0;
 }

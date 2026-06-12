@@ -11,12 +11,6 @@ using pll = pair<ll, ll>;
 
 using vi = vector<int>;
 using vll = vector<ll>;
-
-// -------------------- Constants --------------------
-const int INF = 1e9;
-const ll LINF = 1e18;
-const int MOD = 1e9 + 7;
-
 // -------------------- Macros --------------------
 #define pb push_back
 #define ff first
@@ -33,19 +27,39 @@ void fastIO() {
 // -------------------- Solve --------------------
 void solve() {
     
-    
 }
 
 // -------------------- Main --------------------
 int main() {
     fastIO();
 
-    int T = 1;
-    cin >> T;
+    int n, m;
+    cin >> n >> m;
+    int cnt=1;
+    for(int i=0; i<n; i++){
 
-    while (T--) {
-        solve();
+        if(i % 2==0){
+            for(int k=0; k<m; k++){
+                cout << '#';
+            }
+
+        }else{
+            if(cnt%2 != 0)
+                for(int j=0; j<m; j++){
+                if(j == m-1) cout << '#';
+                else cout << '.';
+            }
+
+            else{
+                for(int j=0; j<m; j++){
+                if(j == 0) cout << '#';
+                else cout << '.';
+            }
+            
+        }
+        cnt++;
     }
-
+    cout << "\n";
+    }
     return 0;
 }

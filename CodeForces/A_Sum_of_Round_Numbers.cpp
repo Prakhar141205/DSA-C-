@@ -31,21 +31,37 @@ void fastIO() {
 }
 
 // -------------------- Solve --------------------
+int cnt=0;
+vi v;
 void solve() {
-    
-    
-}
+    string s;
+    cin >> s;
 
+    vector<int> ans;
+    int n = s.size();
+
+    for (int i = 0; i < n; i++) {
+        if (s[i] != '0') {
+            string cur(n, '0');
+            cur[i] = s[i];
+            ans.push_back(stoi(cur));
+        }
+    }
+
+    cout << ans.size() << "\n";
+    for (int x : ans)
+        cout << x << " ";
+    cout << "\n";
+}
 // -------------------- Main --------------------
 int main() {
     fastIO();
 
     int T = 1;
     cin >> T;
-
-    while (T--) {
+   
+    while(T--){
         solve();
     }
-
     return 0;
 }

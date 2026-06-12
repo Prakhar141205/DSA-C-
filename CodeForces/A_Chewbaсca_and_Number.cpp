@@ -42,10 +42,9 @@ int main() {
 
     int T = 1;
     cin >> T;
-
-    while (T--) {
+   
+    while(T--){
         solve();
     }
-
     return 0;
 }

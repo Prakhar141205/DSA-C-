@@ -5,26 +5,21 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n = 5;
-    int input, answer;
-    int R1, C1;
+    int r=5;
+    int r1, c1;
+    while(r--){
+        int c = 5;
+        while(c--){
+            int n;
+            cin >> n;
 
-    while(n--){
-        vector<int> row(5);
-        for(int i=0; i<=4; i++){
-            cin >> input ;
-            if(input == 1){
-                R1 = 5-n;
-                C1 = i+1;
+            if(n == 1){
+                c1 = c;
+                r1 = r;
             }
-            row[i] = input;
         }
     }
 
-    
-
-    
-    cout <<  abs(3-R1) + abs(3-C1)<<"\n";
-    
+    cout << abs(3-r1) + abs(3-c1) << "\n";
     return 0;
 }

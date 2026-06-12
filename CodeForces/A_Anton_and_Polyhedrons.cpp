@@ -31,8 +31,18 @@ void fastIO() {
 }
 
 // -------------------- Solve --------------------
+int sum=0;
 void solve() {
     
+    string s;
+    cin >> s;
+
+    if(s == "Tetrahedron") sum += 4;
+    else if(s == "Cube") sum += 6;
+    else if(s == "Octahedron") sum += 8;
+    else if(s == "Dodecahedron") sum += 12;
+    else if(s == "Icosahedron") sum += 20;
+
     
 }
 
@@ -42,10 +52,11 @@ int main() {
 
     int T = 1;
     cin >> T;
-
-    while (T--) {
+    
+    while(T--){
         solve();
     }
 
+    cout << sum << "\n";
     return 0;
 }

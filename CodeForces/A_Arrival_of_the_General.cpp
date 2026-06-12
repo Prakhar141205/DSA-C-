@@ -32,8 +32,10 @@ void fastIO() {
 
 // -------------------- Solve --------------------
 void solve() {
-    
-    
+    int x;
+    cin >> x;
+
+
 }
 
 // -------------------- Main --------------------
@@ -42,10 +44,34 @@ int main() {
 
     int T = 1;
     cin >> T;
+   
+   int m = 1000;
+   int M = -1;
 
-    while (T--) {
-        solve();
+   int idxMin = -1;
+   int idxMax = -1;
+   int idx=0;
+    int total = T;
+    while(T--){
+        int x;
+        cin >> x;
+        if(x >= M){
+            M = x;
+            idxMax = idx;
+        }
+        if(x <= m) { 
+            m = x;
+            idxMin = idx;
+        }
+        idx++;
     }
+
+    if(idxMin < idxMax){
+        cout << idxMax + (idx-idxMin-2) << "\n";
+    }else{
+        cout << idxMax + (idx-idxMin-1) << "\n";
+    }
+
 
     return 0;
 }

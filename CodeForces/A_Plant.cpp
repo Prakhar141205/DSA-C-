@@ -32,20 +32,18 @@ void fastIO() {
 
 // -------------------- Solve --------------------
 void solve() {
-    
-    
+    ll n;
+    cin>>n;
+    ll t = pow(4, n);
+    n += 1;
+    ll sum = (n%2==0) ? (n/2)*(n+1) : (n+1)/2*n;
+    cout << t - sum << "\n";
 }
 
 // -------------------- Main --------------------
 int main() {
     fastIO();
 
-    int T = 1;
-    cin >> T;
-
-    while (T--) {
-        solve();
-    }
-
+    solve();
     return 0;
 }

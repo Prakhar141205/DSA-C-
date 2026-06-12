@@ -33,19 +33,19 @@ void fastIO() {
 // -------------------- Solve --------------------
 void solve() {
     
-    
 }
 
 // -------------------- Main --------------------
 int main() {
     fastIO();
 
-    int T = 1;
-    cin >> T;
+    int x1, x2 , x3;
+    cin  >> x1 >> x2 >> x3;
 
-    while (T--) {
-        solve();
-    }
+    int minX1 = abs(x1 - x2) + abs(x1 - x3);
+    int minX2 = abs(x1 - x2) + abs(x2 - x3);
+    int minX3 = abs(x1 - x3) + abs(x2- x3);
 
+    cout << min({minX1, minX2, minX3}) << "\n";
     return 0;
 }
