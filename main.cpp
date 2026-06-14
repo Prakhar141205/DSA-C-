@@ -1,30 +1,32 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-void print(vector<int> vec){
-    int n = vec.size();
-    int maxSum = -98, ansStart=-1, ansEnd=-1;
-    int start=0;
-    int sum=0;
-    for(int i=0; i<n; i++){
-        if(sum == 0) start=i;
-        sum += vec[i];
-        if(sum < 0) sum = 0;
 
-        if(sum > maxSum){
-            maxSum = sum;
-            ansStart = start;
-            ansEnd = i;
-        }
-    }
+class Solution{
+public:
+    int noLeaders(vector<int>& vec){
+        int leaders=1;
+        
+        int n = vec.size();
 
-    for(int i=ansStart; i<=ansEnd; i++){
-        cout << vec[i] << " ";
+        int maximum = vec[n-1];
+
+        
+        
+        for(int i=n-2; i>=0; i--){
+            if( vec[i] > maximum) leaders++; // set stores the element in non decreasing order
+            
+            if(maximum < vec[i]) maximum = vec[i];
+;        }
+
+        return leaders;
     }
-}
+};
 int main(){
-    vector<int> vec = {1, -2,  3, 4};
-    int  k = 9;
-   print(vec);
+    vector<int> vec = {10, 22, 12, 3, 0, 6};
+
+    Solution s;
+
+    cout << "No of leaders are " << s.noLeaders(vec) << "\n";
     return 0;
 }
