@@ -1,7 +1,5 @@
 // Factorial of large numbers
-#include <bits/stdc++.h>
 
-using namespace std;
 class Solution {
 public:
     void multiply(vector<int>& arr, int multiplier, int& size){
@@ -9,7 +7,7 @@ public:
         int carry = 0;
 
         for(int i=0; i<size; i++){
-            int res = multiplier * arr[i];
+            int res = multiplier % 10;
 
             res = res + carry;
             arr[i] = res % 10;
@@ -37,7 +35,7 @@ public:
         vector<int> result;
 
         for(int i = size-1; i>=0; i--){
-            result.push_back(arr[i]);
+            result.push_back(arr[i])
         }
         return result;
     }
@@ -48,7 +46,5 @@ int main(){
 
     Solution s;
 
-    vector<int> res = s.largeNumberFactorial(1000);
-    for(int x : res) cout << x << " ";
-    return 0;
+    s.largeNumberFactorial(1000);
 }
