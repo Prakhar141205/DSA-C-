@@ -1,49 +1,52 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include<unordered_map>
+#include <vector>
+#include <queue>
 using namespace std;
 
-// -------------------- Typedefs --------------------
-using ll = long long;
-using ull = unsigned long long;
-using ld = long double;
+class Graph{
+public:
+    vector<int> kahnAlgorithm(vector<vector<int>>& adj) {
+        int V = adj.size();
 
-using pii = pair<int, int>;
-using pll = pair<ll, ll>;
+        vector<int> inDegree(V, 0);
+        for(int u=0; u<V; u++) {
+            for(auto& x : adj[u]) {
+                inDegree[x]++;
+            }
+        }
 
-using vi = vector<int>;
-using vll = vector<ll>;
+        queue<int> que;
 
-// -------------------- Constants --------------------
-const int INF = 1e9;
-const ll LINF = 1e18;
-const int MOD = 1e9 + 7;
+        for(int i=0; i<V; i++) {
+            if (inDegree[i] == 0) que.push(i);
+        }
 
-// -------------------- Macros --------------------
-#define pb push_back
-#define ff first
-#define ss second
-#define all(x) (x).begin(), (x).end()
-#define rall(x) (x).rbegin(), (x).rend()
+        
+        vector<int> res;
 
-// -------------------- Fast IO --------------------
-void fastIO() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-}
+        while(!que.empty()) {
+            int u = que.front();
+            que.pop();
+            res.push_back(u);
 
-// -------------------- Solve --------------------
-void solve() {
-    
-}
+            for(int& ngbr : adj[u]) {
+                inDegree[ngbr]--;
+                if(inDegree[ngbr] == 0) {
+                    que.push(ngbr);
 
-// -------------------- Main --------------------
-int main() {
-    fastIO();
-
-    int T = 1;
-    cin >> T;
-   
-    while(T--){
-        solve();
+                }
+            }
+        }
+        return res;
     }
+};
+int main(){
+    // make an adjaceny list 
+    vector<vector<int>> adj = {{2, 3}, {4}, {3, 1}, {1}, {}, {1, 4}};
+    Graph graph;
+    vector<int> res = graph.kahnAlgorithm(adj);
+
+    for(int x :  res) cout << x << " ";
     return 0;
 }
