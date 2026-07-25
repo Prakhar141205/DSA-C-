@@ -32,7 +32,40 @@ void fastIO() {
 
 // -------------------- Solve --------------------
 void solve() {
-    
+    int n ;
+    cin >> n ;
+    int even_cnt = 0;
+    int odd_cnt = 0;
+    int i = 0;
+    int c_placed = 0;
+    int ic_placed = 0;
+
+    while(n--){
+        int a;
+        cin >> a ;
+
+        if(a & 1) odd_cnt += 1;
+        else even_cnt += 1 ;
+
+        if((i & 1) && (a & 1)) {
+            c_placed += 1;
+        }else if(i % 2 == 0 && a & 2 == 0 ){
+            c_placed += 1 ;
+        }else if(i%2 == 0 && a & 1) ic_placed += 1;
+        else if(i % 2 != 0 && a & 1 == 0) ic_placed += 1;
+
+        
+
+
+    }
+
+    if(even_cnt != odd_cnt) {cout << -1 << "\n"; return ;}
+
+    cout << ic_placed / 2 << "\n";
+
+
+
+
 }
 
 // -------------------- Main --------------------

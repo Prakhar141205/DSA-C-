@@ -32,18 +32,22 @@ void fastIO() {
 
 // -------------------- Solve --------------------
 void solve() {
-    
+    int k, r ;
+    cin >> k >> r ;
+    int ans = 1;
+
+    while(k*ans % 10 != 0  && k * ans % 10 != r){
+        ans++;
+
+    }
+
+    cout << ans << "\n";
 }
 
 // -------------------- Main --------------------
 int main() {
     fastIO();
 
-    int T = 1;
-    cin >> T;
-   
-    while(T--){
-        solve();
-    }
+    solve();
     return 0;
 }

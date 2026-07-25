@@ -32,7 +32,30 @@ void fastIO() {
 
 // -------------------- Solve --------------------
 void solve() {
+    string sn ;
+    cin >> sn ;
+    // string sn = to_string(n);
+    bool z = false;
+    int e = 0;
+    int s = 0;
+    for(char& c : sn) {
+        if(c == '0') {
+            z = true;
+        }
+
+        int d = (c-'0') ;
+
+        if(d % 2 == 0 ) e++;
+
+        s += d ;
+    }
     
+    bool isDiv = (s % 3 == 0) ? true : false;
+    
+    // cout << z << " " << e << " " << isDiv << "\n";
+
+    if(z && (e >= 2) && isDiv) cout << "red" << "\n";
+    else cout << "cyan" <<"\n";
 }
 
 // -------------------- Main --------------------
