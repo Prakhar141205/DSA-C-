@@ -16,7 +16,7 @@ using vll = vector<ll>;
 const int INF = 1e9;
 const ll LINF = 1e18;
 const int MOD = 1e9 + 7;
-
+#define forn(i, n) for(int i=0; i<n; i++) 
 // -------------------- Macros --------------------
 #define pb push_back
 #define ff first
@@ -31,16 +31,37 @@ void fastIO() {
 }
 
 // -------------------- Solve --------------------
-int maxP = INT_MIN ;
-int p = 0;
 void solve() {
-    int x, n ;
-    cin >> x >> n ;
+    string s ; cin >> s ;
+    int n = s.length();
 
-    int rem = (p + n - x ) ;
-    maxP = max(maxP, rem);
+    int i_st = -1 ;
 
-    p = rem ;
+    forn(i, n) {
+        if(s[i] == '1') {
+            i_st = i;
+            break;
+        }
+    }
+
+    // if there is no 1 in the string 
+    if(i_st == -1 ) {cout << 0 << "\n"; return;}
+
+
+    int end_i = -1;
+    for(int i=n-1; i>=0; i--) {
+        if(s[i] == '1') {
+            end_i = i;
+            break;
+        }
+    }
+    
+    int ans =0;
+    for(int i = i_st; i<= end_i; i++) {
+        if(s[i] == '0') ans += 1; 
+    }
+
+    cout << ans << "\n";
 }
 
 // -------------------- Main --------------------
@@ -53,7 +74,5 @@ int main() {
     while(T--){
         solve();
     }
-
-    cout << maxP << "\n";
     return 0;
 }

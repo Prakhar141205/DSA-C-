@@ -30,29 +30,28 @@ void fastIO() {
     cin.tie(nullptr);
 }
 
+// -------------------- Solve --------------------
+void solve() {
+    
+}
+
 // -------------------- Main --------------------
 int main() {
     fastIO();
 
+    string s; cin >> s ;
 
-   
-    ll x; cin >> x;
-    int cnt = 0;
+    char c1 = s[0];
+    char c2 = s[1];
 
-    while(x) {
-        int d = x%10 ;
+    for(int i=0; i<5; i++) {
+        string x ; cin >> x ;
 
-        if(d == 4 || d == 7) cnt++;
-        x /= 10 ;
+        if(x[0] == c1 || x[1] == c2) {cout << "YES\n"; return 0;}
+         
+        
     }
 
-    if(cnt == 4 || cnt == 7) {
-        cout << "YES\n";
-    }else {
-
-        cout << "NO\n";
-    }
-
-   
+    cout << "NO\n";
     return 0;
 }

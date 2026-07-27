@@ -30,29 +30,26 @@ void fastIO() {
     cin.tie(nullptr);
 }
 
+// -------------------- Solve --------------------
+void solve() {
+    string n;  cin >> n ;
+
+    vi v(4, 0);
+    v[0] = 9; v[1] = 7; v[2] = 4; v[3] = 0;
+    int x = n.length();
+
+    cout << (n[0] - '0' ) * 10 - (v[x-1]) << "\n"; 
+}
+
 // -------------------- Main --------------------
 int main() {
     fastIO();
 
-
+    int T = 1;
+    cin >> T;
    
-    ll x; cin >> x;
-    int cnt = 0;
-
-    while(x) {
-        int d = x%10 ;
-
-        if(d == 4 || d == 7) cnt++;
-        x /= 10 ;
+    while(T--){
+        solve();
     }
-
-    if(cnt == 4 || cnt == 7) {
-        cout << "YES\n";
-    }else {
-
-        cout << "NO\n";
-    }
-
-   
     return 0;
 }

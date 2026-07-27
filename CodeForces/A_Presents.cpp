@@ -11,7 +11,7 @@ using pll = pair<ll, ll>;
 
 using vi = vector<int>;
 using vll = vector<ll>;
-
+using vpi = vector<pair<int, int>>;
 // -------------------- Constants --------------------
 const int INF = 1e9;
 const ll LINF = 1e18;
@@ -29,30 +29,26 @@ void fastIO() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 }
-
 // -------------------- Main --------------------
 int main() {
     fastIO();
 
+    int T = 1;
+    cin >> T;
+    int i=1;
+    vpi v;
 
-   
-    ll x; cin >> x;
-    int cnt = 0;
-
-    while(x) {
-        int d = x%10 ;
-
-        if(d == 4 || d == 7) cnt++;
-        x /= 10 ;
+    while(T--){
+        int x ;
+        cin >> x ;
+        
+        v.push_back({x, i});
+        i++;
+        
     }
 
-    if(cnt == 4 || cnt == 7) {
-        cout << "YES\n";
-    }else {
-
-        cout << "NO\n";
-    }
-
-   
+    sort(all(v));
+    for(auto [x, i] : v) cout << i << " " ;
+    cout << "\n";
     return 0;
 }

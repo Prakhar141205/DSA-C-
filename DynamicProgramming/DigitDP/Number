@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int t[10][2][10] ;
+    int solve(string& s, int idx, bool tight, int cnt_1) {
+        if(idx == s.length()) return cnt_1;
+
+        if(t[idx][tight][cnt_1] != -1 ) return t[idx][tight][cnt_1] ;
+        int lower_bd = 0;
+        int upper_bd = (tight == 1 ? s[idx] - '0' : 9) ;
+
+        int res = 0;
+
+        // i ===> digit
+        for(int i=lower_bd; i<=upper_bd; i++) {
+            res += solve(s, idx+1, tight & (i == upper_bd), (cnt_1 + (i == 1))) ;
+        }
+
+        return t[idx][tight][cnt_1]=res;
+    }
+    int countDigitOne(int n) {
+        string s = to_string(n);
+        memset(t, -1, sizeof(t));
+
+        return solve(s, 0, 1, 0);
+        
+    }
+};

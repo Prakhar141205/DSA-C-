@@ -30,29 +30,32 @@ void fastIO() {
     cin.tie(nullptr);
 }
 
+// -------------------- Solve --------------------
+void solve() {
+    
+}
+
 // -------------------- Main --------------------
 int main() {
     fastIO();
 
+    int T ;
+    cin >> T;
+    int ans = 1 ;
+    int cubes = 0;
+    int i;
+    
+    for(int h=1; h <= 100; h++ ) {
 
-   
-    ll x; cin >> x;
-    int cnt = 0;
+        cubes = (h) * (h+1) * (h+2) /  6 ;
 
-    while(x) {
-        int d = x%10 ;
-
-        if(d == 4 || d == 7) cnt++;
-        x /= 10 ;
+        if(cubes <= T) {
+            ans = h ;
+        }else {
+            break ;
+        }
     }
 
-    if(cnt == 4 || cnt == 7) {
-        cout << "YES\n";
-    }else {
-
-        cout << "NO\n";
-    }
-
-   
+     cout << ans << "\n";
     return 0;
 }
