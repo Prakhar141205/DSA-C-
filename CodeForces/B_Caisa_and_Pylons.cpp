@@ -35,21 +35,13 @@ int main() {
 
     int T;
     cin >> T;
-
+    int M = -1;
     while (T--) {
-        int n; cin >> n ;
-        vi o, e ;
-        forn(i, n) {
-            int x; cin >> x;
-            if(i % 2 == 0 && x % 2 != 0) e.pb(x);
-            else if(i % 2 == 1 && x % 2 == 0) o.pb(x);
-        }
-
-        if(o.size() != e.size()) {cout << -1 << "\n"; continue;}
-
-        
-        cout << o.size() << "\n";
+        int x; cin >> x ;
+        M = max(M, x);
     }
+
+    cout << M << "\n";
 
     return 0;
 }

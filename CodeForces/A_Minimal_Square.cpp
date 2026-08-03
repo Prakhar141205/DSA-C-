@@ -37,18 +37,13 @@ int main() {
     cin >> T;
 
     while (T--) {
-        int n; cin >> n ;
-        vi o, e ;
-        forn(i, n) {
-            int x; cin >> x;
-            if(i % 2 == 0 && x % 2 != 0) e.pb(x);
-            else if(i % 2 == 1 && x % 2 == 0) o.pb(x);
-        }
+        int a, b ; cin >> a >> b ;
 
-        if(o.size() != e.size()) {cout << -1 << "\n"; continue;}
+        int m = min(a, b) ;
+        int M = max(a, b) ;
 
-        
-        cout << o.size() << "\n";
+        if(2*m >= M) cout << pow(2*m, 2) << "\n";
+        else cout << M*M << "\n";
     }
 
     return 0;
