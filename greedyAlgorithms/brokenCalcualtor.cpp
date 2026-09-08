@@ -21,3 +21,32 @@ while((stval < target)){
 }
 
 cnt += (stval - target)
+
+// Using BFS
+class Solution {
+public:
+    int brokenCalc(int startValue, int target) {
+        queue<int> q;
+        q.push(target);
+
+        int ops = 0;
+
+        while(!q.empty()) {
+            int cur = q.front();
+            q.pop();
+
+            if(cur <= startValue) {
+                return ops + startValue - cur;
+            }
+
+            if(cur % 2 == 0) {
+                q.push(cur / 2);
+            }else {
+                q.push(cur + 1);
+            }
+
+            ++ops;
+        }
+        return -1 ;
+    }
+};
