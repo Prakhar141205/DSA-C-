@@ -1,41 +1,42 @@
+/*
+For finding overlapping between 2 matrices 
+row offset is -n+1 to n-1 inclusive similarly columns
+    A[i][j] = B[i+rowoffset][j+offset] 
+    // contingent to the indices used inside matrices are valid
+    
+*/
 class Solution {
 public:
-    int countOverlaps(vector<vector<int>> A, vector<vector<int>> B, int rowOff, int colOff) {
-        int n = A.size();
-        int cnt=0;
-        for(int i=0; i<n; i++){
+    int n;
+    int cntMaxOverLaps(vector<vector<int>>& img1, vector<vector<int>>& img2, int ro, int co) {
 
-            for(int j=0; j<n; j++){
+        int cnt = 0;
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<n; j++) {
 
-                /*
-                A[i][j] ==> B[i+rowOff][j + colOff]
-                */
+                int b_i = ro + i;
+                int b_j = co + j ;
 
-                int B_i = i + rowOff;
-                int B_j = j + colOff;
+                if(b_i < 0 || b_i >= n || b_j < 0 || b_j >= n) continue;
 
-                if(B_i < 0 || B_i >= n || B_j < 0 || B_j >= n) continue;
-
-                if(A[i][j] == 1 && B[B_i][B_j] == 1) cnt++;
-
-
+                cnt += (img1[i][j] == 1 && img2[b_i][b_j] == 1);
             }
         }
         return cnt;
     }
-    int largestOverlap(vector<vector<int>>& A, vector<vector<int>>& B) {
-        int n = A.size();
+    int largestOverlap(vector<vector<int>>& img1, vector<vector<int>>& img2) {
+        n = img1.size();
+        int ans = 0;
 
-        int maxOverlaps = 0;
+        for(int ro = -n+1; ro < n; ro++) {
 
-        for(int rowOff = -n+1; rowOff <= n-1; rowOff++){
+            for(int co = -n+1; co < n; co++) {
 
-            for(int colOff = -n+1; colOff <= n-1; colOff++){
-                int count = countOverlaps(A, B, rowOff, colOff);
-                maxOverlaps = max(maxOverlaps, count);
+                int cnt = cntMaxOverLaps(img1, img2, ro, co);
+                ans = max(ans, cnt);
             }
         }
-        return maxOverlaps;
 
+        return ans;
     }
 };
