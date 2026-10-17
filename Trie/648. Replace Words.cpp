@@ -68,3 +68,56 @@ public:
         return result;
     }   
 };
+
+
+
+
+class TrieNode {
+public:
+    bool eow;
+    TrieNode* children[26];
+
+    TrieNode() {
+        eow = false;
+
+        for (int i = 0; i < 26; i++) {
+            children[i] = nullptr;
+        }
+    }
+
+    void insert(string s) {
+        TrieNode* crawler = this;
+
+        for (char c : s) {
+            int idx = c - 'a';
+
+            if (crawler->children[idx] == nullptr) {
+                crawler->children[idx] = new TrieNode();
+            }
+
+            crawler = crawler->children[idx];
+        }
+
+        crawler->eow = true;
+    }
+
+    string search(string& word) {
+        TrieNode* crawler = this;
+
+        for (int i = 0; i < word.length(); i++) {
+            int idx = word[i] - 'a';
+
+            if (crawler->children[idx] == nullptr) {
+                return word;
+            }
+
+            crawler = crawler->children[idx];
+
+            if (crawler->eow) {
+                return word.substr(0, i + 1);
+            }
+        }
+
+        return word;
+    }
+};
