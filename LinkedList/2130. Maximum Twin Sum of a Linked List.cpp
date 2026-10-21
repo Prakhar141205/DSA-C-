@@ -1,13 +1,6 @@
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
+// Approach 1 using vectors and use two pointers and compare the these two pointets sum
+// Approach 2 usiing stack and ierate till half of the linked list
+
 class Solution {
 public:
     int pairSum(ListNode* head) {
