@@ -5,6 +5,7 @@ public:
     vector<string> result;
     int r, c;
     vector<pair<int, int>> directions{{-1, 0},{1, 0},{0, 1},{0, -1}};
+    
     struct trieNode {
         bool endOfWord;
         trieNode* children[26];
