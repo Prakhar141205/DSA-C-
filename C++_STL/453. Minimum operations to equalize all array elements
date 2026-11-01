@@ -1,0 +1,346 @@
+/*
+LeetCode 453 — Minimum Moves to Equal Array Elements
+Comprehensive C++ solution variations
+
+Operation: In one move, increment exactly n-1 elements by 1.
+Goal: Make every element equal using the fewest moves.
+
+CORE MATHEMATICAL REDUCTION
+Incrementing n-1 elements is equivalent, with respect to differences between
+elements, to decrementing the one excluded element by 1.
+
+Therefore, an optimal strategy is to reduce every element to the original
+minimum. The minimum never needs to change.
+
+Answer = sum(nums[i] - minimum)
+       = sum(nums) - n * minimum
+
+All arithmetic that involves a sum should use long long.
+
+The implementations below are independent alternatives. They are not meant
+to be pasted together as multiple Solution classes without renaming.
+
+1. Direct simulation with repeated maximum selection — brute force.
+2. Direct simulation with sorting each round — brute force variant.
+3. Direct simulation with a max heap — brute force variant.
+4. Sort once, then use the formula.
+5. Sort once, then accumulate differences from the minimum.
+6. Two-pass min + sum formula.
+7. One-pass min + sum formula.
+8. One-pass running-difference formula.
+9. Transform viewpoint: sum of differences from the minimum.
+10. Frequency/counting formulation (conceptual; only useful for a small,
+    bounded value range).
+11. Reduce-the-maximum simulation using a min-heap of all values (equivalent
+    state transformation; included for understanding, not performance).
+
+Important:
+- Variations 4–9 are mathematically equivalent O(n) or O(n log n) solutions.
+- Variations 1–3 and 11 simulate individual moves and can be prohibitively slow.
+- LeetCode's constraints make simulation unsuitable.
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// -----------------------------------------------------------------------------
+// 1. BRUTE FORCE: Repeatedly find the maximum and increment every other value.
+// Time: O(M * n), where M is the number of moves.
+// Space: O(1) auxiliary.
+// This directly simulates the operation in the problem statement.
+// -----------------------------------------------------------------------------
+class Solution1_DirectSimulation {
+public:
+    int minMoves(vector<int>& nums) {
+        long long moves = 0;
+
+        while (true) {
+            int mn = *min_element(nums.begin(), nums.end());
+            int mx = *max_element(nums.begin(), nums.end());
+
+            if (mn == mx) return (int)moves;
+
+            // Leave one occurrence of the maximum unchanged.
+            bool skippedMaximum = false;
+            for (int i = 0; i < (int)nums.size(); ++i) {
+                if (nums[i] == mx && !skippedMaximum) {
+                    skippedMaximum = true;
+                } else {
+                    ++nums[i];
+                }
+            }
+            ++moves;
+        }
+    }
+};
+
+// -----------------------------------------------------------------------------
+// 2. BRUTE FORCE VARIANT: Sort on every iteration.
+// Time: O(M * n log n), plus O(M*n) updates.
+// Space: O(1) auxiliary if sorting in place.
+// Sorting is unnecessary work on every move; this is generally slower.
+// -----------------------------------------------------------------------------
+class Solution2_SortEveryRound {
+public:
+    int minMoves(vector<int>& nums) {
+        long long moves = 0;
+
+        while (true) {
+            sort(nums.begin(), nums.end());
+            if (nums.front() == nums.back()) return (int)moves;
+
+            // Sorted last element is one maximum; increment all others.
+            for (int i = 0; i + 1 < (int)nums.size(); ++i) {
+                ++nums[i];
+            }
+            ++moves;
+        }
+    }
+};
+
+// -----------------------------------------------------------------------------
+// 3. BRUTE FORCE VARIANT: Max heap rebuilt after each move.
+// Time: O(M * n log n), Space: O(n).
+// Heap top is the maximum; all remaining values are incremented and reinserted.
+// -----------------------------------------------------------------------------
+class Solution3_MaxHeapSimulation {
+public:
+    int minMoves(vector<int>& nums) {
+        priority_queue<int> pq;
+        for (int x : nums) pq.push(x);
+
+        if (pq.size() <= 1) return 0;
+
+        long long moves = 0;
+        while (true) {
+            int mx = pq.top();
+            pq.pop();
+
+            vector<int> values;
+            values.reserve(pq.size());
+            while (!pq.empty()) {
+                values.push_back(pq.top() + 1);
+                pq.pop();
+            }
+
+            bool allEqual = true;
+            for (int x : values) {
+                if (x != mx) {
+                    allEqual = false;
+                    break;
+                }
+            }
+            if (allEqual) return (int)(moves + 1);
+
+            pq.push(mx);
+            for (int x : values) pq.push(x);
+            ++moves;
+        }
+    }
+};
+
+// -----------------------------------------------------------------------------
+// 4. SORT ONCE + FORMULA.
+// Time: O(n log n), Space: O(1) auxiliary (sorting implementation may use
+// O(log n) stack space).
+// Since nums[0] is the minimum, answer = sum(nums[i] - nums[0]).
+// -----------------------------------------------------------------------------
+class Solution4_SortAndFormula {
+public:
+    int minMoves(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        long long ans = 0;
+
+        for (int x : nums) {
+            ans += (long long)x - nums[0];
+        }
+        return (int)ans;
+    }
+};
+
+// -----------------------------------------------------------------------------
+// 5. SORT ONCE + ACCUMULATE DIFFERENCES.
+// Same complexity as #4, but explicitly skips the minimum element.
+// -----------------------------------------------------------------------------
+class Solution5_SortAndAccumulate {
+public:
+    int minMoves(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        long long ans = 0;
+
+        for (int i = 1; i < (int)nums.size(); ++i) {
+            ans += (long long)nums[i] - nums[0];
+        }
+        return (int)ans;
+    }
+};
+
+// -----------------------------------------------------------------------------
+// 6. TWO-PASS OPTIMAL: Find minimum, then sum differences.
+// Time: O(n), Space: O(1).
+// Does not modify the input.
+// -----------------------------------------------------------------------------
+class Solution6_TwoPassMinAndSum {
+public:
+    int minMoves(vector<int>& nums) {
+        int mn = *min_element(nums.begin(), nums.end());
+        long long ans = 0;
+
+        for (int x : nums) {
+            ans += (long long)x - mn;
+        }
+        return (int)ans;
+    }
+};
+
+// -----------------------------------------------------------------------------
+// 7. ONE-PASS OPTIMAL: Track minimum and total sum.
+// Time: O(n), Space: O(1).
+// Formula: sum(nums) - n * minimum.
+// -----------------------------------------------------------------------------
+class Solution7_OnePassMinAndSum {
+public:
+    int minMoves(vector<int>& nums) {
+        long long sum = 0;
+        int mn = INT_MAX;
+
+        for (int x : nums) {
+            sum += x;
+            mn = min(mn, x);
+        }
+
+        return (int)(sum - 1LL * nums.size() * mn);
+    }
+};
+
+// -----------------------------------------------------------------------------
+// 8. ONE-PASS RUNNING DIFFERENCE.
+// If a new minimum is found, all previously seen elements gain extra excess
+// equal to (old minimum - new minimum). Track how many were seen.
+// Time: O(n), Space: O(1).
+// -----------------------------------------------------------------------------
+class Solution8_OnePassRunningDifference {
+public:
+    int minMoves(vector<int>& nums) {
+        long long excess = 0;
+        int mn = INT_MAX;
+        long long seen = 0;
+
+        for (int x : nums) {
+            if (x < mn) {
+                if (mn != INT_MAX) {
+                    excess += 1LL * (mn - x) * seen;
+                }
+                mn = x;
+            } else {
+                excess += (long long)x - mn;
+            }
+            ++seen;
+        }
+        return (int)excess;
+    }
+};
+
+// -----------------------------------------------------------------------------
+// 9. EXPLICIT TRANSFORMATION: Sum each element's distance from the minimum.
+// This is the canonical optimal expression written as a transform.
+// Time: O(n), Space: O(1).
+// -----------------------------------------------------------------------------
+class Solution9_TransformToMinimum {
+public:
+    int minMoves(vector<int>& nums) {
+        const int target = *min_element(nums.begin(), nums.end());
+        long long operations = 0;
+
+        for (int& value : nums) {
+            operations += value - target;
+        }
+        return (int)operations;
+    }
+};
+
+// -----------------------------------------------------------------------------
+// 10. FREQUENCY / COUNTING FORMULATION.
+// Only potentially useful when values lie in a small known range.
+// First find the minimum; then count occurrences of each value and sum
+// (value - minimum) * frequency[value].
+// Time: O(n + R), Space: O(R), where R is the value-range size.
+// This is not preferable for the original problem's broad integer range.
+// -----------------------------------------------------------------------------
+class Solution10_FrequencyCounting {
+public:
+    int minMoves(vector<int>& nums) {
+        int mn = *min_element(nums.begin(), nums.end());
+        int mx = *max_element(nums.begin(), nums.end());
+
+        vector<long long> freq((size_t)mx - mn + 1, 0);
+        for (int x : nums) {
+            ++freq[x - mn];
+        }
+
+        long long ans = 0;
+        for (int offset = 0; offset < (int)freq.size(); ++offset) {
+            ans += 1LL * offset * freq[offset];
+        }
+        return (int)ans;
+    }
+};
+
+// -----------------------------------------------------------------------------
+// 11. EQUIVALENT REDUCTION VIEWPOINT.
+// Rather than literally incrementing n-1 values, decrement the current maximum
+// by one until all values equal the minimum. This simulates the equivalent
+// relative-difference process.
+// A max heap supports extracting/updating the maximum, but each move still
+// costs heap operations: O(M log n), O(n) space.
+// -----------------------------------------------------------------------------
+class Solution11_DecrementMaximumWithHeap {
+public:
+    int minMoves(vector<int>& nums) {
+        priority_queue<int> pq;
+        int mn = INT_MAX;
+
+        for (int x : nums) {
+            pq.push(x);
+            mn = min(mn, x);
+        }
+
+        long long moves = 0;
+        while (pq.top() > mn) {
+            int x = pq.top();
+            pq.pop();
+            pq.push(x - 1);
+            ++moves;
+        }
+        return (int)moves;
+    }
+};
+
+/*
+RECOMMENDATION
+- Best interview answer: Solution6 (two-pass minimum + sum of differences).
+- Equally optimal alternative: Solution7 (one-pass minimum + total sum).
+- Best for explaining the mathematical reduction: Solution9.
+- Sorting is unnecessary because the problem only needs the minimum.
+- Do not use simulation for the original constraints.
+
+COMPLEXITY SUMMARY
+#1  Direct simulation             O(M*n)          O(1)
+#2  Sort every round              O(M*n log n)    O(1) auxiliary
+#3  Max-heap simulation           O(M*n log n)    O(n)
+#4  Sort once + formula           O(n log n)      O(1) auxiliary*
+#5  Sort once + accumulate        O(n log n)      O(1) auxiliary*
+#6  Two-pass min + differences    O(n)            O(1)
+#7  One-pass min + sum            O(n)            O(1)
+#8  Running difference            O(n)            O(1)
+#9  Transform to minimum          O(n)            O(1)
+#10 Frequency counting            O(n + R)        O(R)
+#11 Decrement max with heap       O(M log n)      O(n)
+
+M = answer / number of simulated moves; R = max(nums) - min(nums) + 1.
+*Sorting may use implementation-dependent stack space, commonly O(log n).
+
+NOTE ON INTEGER RANGE
+LeetCode 453's answer fits the platform's required int return type under its
+constraints, but intermediate sums should still use long long.
+*/
