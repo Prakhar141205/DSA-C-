@@ -257,3 +257,269 @@ IMPORTANT:
 - In LeetCode's environment, deleting the removed node is optional for
   correctness, but is good C++ memory hygiene.
 */
+
+
+/*
+    LeetCode 19. Remove Nth Node From End of List
+    Language: C++17
+
+    LeetCode provides ListNode. Do not redefine ListNode when submitting.
+
+    Each approach is implemented in a separate class. Rename the selected
+    class to Solution before submitting to LeetCode.
+
+    The problem guarantees 1 <= n <= list length.
+*/
+
+#include <vector>
+#include <stack>
+using namespace std;
+
+// -----------------------------------------------------------------------------
+// Approach 1: Two-pass length calculation
+// Technique: Count nodes, then move to the node immediately before the target.
+//
+// Time:  O(L)
+// Space: O(1)
+//
+// Pass 1 obtains the list length L.
+// The target's zero-based index from the front is L - n.
+// A dummy node makes deleting the head work exactly like deleting any other
+// node. The dummy itself is not returned.
+// -----------------------------------------------------------------------------
+class Solution_TwoPass {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        int length = 0;
+
+        for (ListNode* current = head; current != nullptr; current = current->next)
+            ++length;
+
+        ListNode dummy(0);
+        dummy.next = head;
+
+        // Stop at the node just before the one to remove.
+        ListNode* previous = &dummy;
+        int steps = length - n;
+
+        while (steps-- > 0)
+            previous = previous->next;
+
+        ListNode* nodeToDelete = previous->next;
+        previous->next = nodeToDelete->next;
+        delete nodeToDelete;
+
+        return dummy.next;
+    }
+};
+
+// -----------------------------------------------------------------------------
+// Approach 2: One-pass fast and slow pointers (RECOMMENDED)
+// Technique: Two pointers + dummy node
+//
+// Time:  O(L)
+// Space: O(1)
+//
+// Move fast n nodes ahead. Then move fast and slow together until fast reaches
+// the last node. At that point slow is immediately before the target.
+//
+// Why it works:
+//     fast is always n nodes ahead of slow. When fast reaches the final node,
+//     slow is exactly n nodes before the end, i.e. just before the target.
+// -----------------------------------------------------------------------------
+class Solution_OnePassTwoPointers {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode dummy(0);
+        dummy.next = head;
+
+        ListNode* fast = &dummy;
+        ListNode* slow = &dummy;
+
+        // Establish a gap of n nodes between fast and slow.
+        for (int i = 0; i < n; ++i)
+            fast = fast->next;
+
+        // Keep the gap while moving fast to the final node.
+        while (fast->next != nullptr) {
+            fast = fast->next;
+            slow = slow->next;
+        }
+
+        // slow is the node immediately before the node to remove.
+        ListNode* nodeToDelete = slow->next;
+        slow->next = nodeToDelete->next;
+        delete nodeToDelete;
+
+        return dummy.next;
+    }
+};
+
+// -----------------------------------------------------------------------------
+// Approach 3: Recursive traversal
+// Technique: Recursion; return the distance from the end
+//
+// Time:  O(L)
+// Space: O(L) recursion stack
+//
+// Each recursive call returns the current node's position counted from the
+// end: last node returns 1, second-last returns 2, and so on.
+// When the returned distance from the next node equals n, the current node
+// is immediately before the target, so it bypasses and deletes that target.
+//
+// A pointer-to-pointer is not needed here because the dummy node handles the
+// special case where the head itself must be removed.
+// -----------------------------------------------------------------------------
+class Solution_Recursive {
+private:
+    int removeFromEnd(ListNode* current, int n) {
+        if (current == nullptr)
+            return 0;
+
+        int distance = removeFromEnd(current->next, n) + 1;
+
+        if (distance == n + 1) {
+            ListNode* nodeToDelete = current->next;
+            current->next = nodeToDelete->next;
+            delete nodeToDelete;
+        }
+
+        return distance;
+    }
+
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode dummy(0);
+        dummy.next = head;
+        removeFromEnd(&dummy, n);
+        return dummy.next;
+    }
+};
+
+// -----------------------------------------------------------------------------
+// Approach 4: Stack of node pointers
+// Technique: Stack
+//
+// Time:  O(L)
+// Space: O(L)
+//
+// Push every node onto a stack. The top is the last node. Pop n nodes to reach
+// the node immediately before the target. A dummy node is pushed first so
+// removing the original head is handled uniformly.
+//
+// Note: The stack stores pointers; it does not copy the linked-list nodes.
+// -----------------------------------------------------------------------------
+class Solution_Stack {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode dummy(0);
+        dummy.next = head;
+
+        stack<ListNode*> nodes;
+        nodes.push(&dummy);
+
+        for (ListNode* current = head; current != nullptr; current = current->next)
+            nodes.push(current);
+
+        // Remove the target and all nodes after it from the stack.
+        for (int i = 0; i < n; ++i)
+            nodes.pop();
+
+        // The new top is immediately before the target.
+        ListNode* previous = nodes.top();
+        ListNode* nodeToDelete = previous->next;
+
+        previous->next = nodeToDelete->next;
+        delete nodeToDelete;
+
+        return dummy.next;
+    }
+};
+
+// -----------------------------------------------------------------------------
+// Approach 5: Store node pointers in a vector
+// Technique: Vector / random access
+//
+// Time:  O(L)
+// Space: O(L)
+//
+// The vector contains the original nodes in head-to-tail order.
+// The target index from the front is L - n. Its predecessor can be found
+// directly, with a separate case for deleting the head.
+// -----------------------------------------------------------------------------
+class Solution_Vector {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        vector<ListNode*> nodes;
+
+        for (ListNode* current = head; current != nullptr; current = current->next)
+            nodes.push_back(current);
+
+        int targetIndex = static_cast<int>(nodes.size()) - n;
+        ListNode* nodeToDelete = nodes[targetIndex];
+
+        if (targetIndex == 0) {
+            head = nodeToDelete->next;
+        } else {
+            nodes[targetIndex - 1]->next = nodeToDelete->next;
+        }
+
+        delete nodeToDelete;
+        return head;
+    }
+};
+
+/*
+    DRY RUN — Approach 2 (one-pass two pointers)
+
+    Input:
+        head = 1 -> 2 -> 3 -> 4 -> 5
+        n = 2
+
+    Start:
+        dummy -> 1 -> 2 -> 3 -> 4 -> 5
+        fast = dummy
+        slow = dummy
+
+    Move fast n = 2 steps:
+        fast: dummy -> 1 -> 2
+        slow: dummy
+
+    Move both until fast is the last node:
+        fast = 3, slow = 1
+        fast = 4, slow = 2
+        fast = 5, slow = 3
+
+    Now slow->next is 4, the 2nd node from the end.
+    Bypass and delete it:
+        slow->next = 5
+
+    Output:
+        1 -> 2 -> 3 -> 5
+
+    EDGE CASE — remove the head:
+        head = 1 -> 2, n = 2
+
+        After moving fast two steps:
+            fast = 2, slow = dummy
+
+        fast is already the last node, so the loop does not run.
+        slow->next is 1; bypass it and return dummy->next (node 2).
+
+    COMPLEXITY SUMMARY:
+        Two-pass length:       O(L) time, O(1) extra space
+        One-pass pointers:     O(L) time, O(1) extra space
+        Recursion:             O(L) time, O(L) call stack
+        Stack:                 O(L) time, O(L) extra space
+        Vector:                O(L) time, O(L) extra space
+
+    RECOMMENDATION:
+        Use Solution_OnePassTwoPointers for the follow-up requirement.
+        It traverses the list once, uses O(1) extra space, and handles head
+        deletion cleanly through the dummy node.
+
+    MEMORY MANAGEMENT:
+        Each implementation deletes the removed node with delete.
+        This is appropriate for the standard LeetCode ListNode allocation
+        model. The dummy node is a local stack object and is never deleted.
+*/
