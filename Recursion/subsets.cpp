@@ -1,33 +1,28 @@
-#include <iostream>
-#include <vector>
-#include <string>
-using namespace std;
+class Solution {
+public:
+    vector<vector<int>> ans;
 
-// print all subsets if all the elements of the array are unique
-void printAllSub(vector<int> arr, vector<int> &ans, int i){
-    if(i == arr.size()){
-        for(int val : ans){
-            cout << val << " ";
-
+    void solve(vector<int>& nums, int i, vector<int>& temp) {
+        if(i >= nums.size() ) {
+            ans.push_back(temp);
+            return;
         }
-        cout << endl;
-        return;
+
+        temp.push_back(nums[i]);
+        solve(nums, i+1, temp);
+        temp.pop_back();
+
+        solve(nums, i+1, temp);
+        
     }
 
-    // include
-    ans.push_back(arr[i]);
-    printAllSub(arr, ans, i+1);
-    // exclude
-    ans.pop_back();
-    printAllSub(arr, ans, i+1);
-}
+    vector<vector<int>> subsets(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> temp;
+        
+        solve(nums, 0, temp);
 
+        return ans;
 
-// print all the unique subsets if all the elements are not unique => repetition is allowed
-int main(){
-    vector<int> arr = {1, 3, 4};
-    vector<int> ans;
-
-    printAllSub(arr, ans, 0);
-    return 0;
-}
+    }
+};
