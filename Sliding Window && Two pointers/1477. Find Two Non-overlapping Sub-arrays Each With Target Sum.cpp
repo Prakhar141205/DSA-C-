@@ -1,35 +1,69 @@
+
+//Sliding window - Separate function to check vowel
 class Solution {
 public:
-    int minSumOfLengths(vector<int>& arr, int target) {
-        int n = arr.size();
-        int l=0;
-
-        int currSum = 0;
-        int ans = INT_MAX;
-        int bestMinLen = INT_MAX;
-        vector<int> minBestLenTillIdx(n, INT_MAX);
-
-
-        for(int r=0; r<n; r++) {
-            currSum += arr[r];
-            while(l < r && currSum > target) {
-                currSum -= arr[l++];
+    bool isVowel(char &ch) {
+        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+    }
+    
+    int maxVowels(string s, int k) {
+        int n = s.length();
+        
+        int maxV  = 0;
+        int count = 0;
+        int i = 0, j = 0;
+        
+        while(j < n) {
+            
+            if(isVowel(s[j]))
+                count++;
+            
+            if(j-i+1 == k) {
+                maxV = max(maxV, count);
+                if(isVowel(s[i]))
+                    count--;
+                i++;
             }
-
-            if(currSum == target) {
-                int len = (r-l+1);
-
-                if(l > 0 && minBestLenTillIdx[l-1] != INT_MAX) {
-                    ans = min(ans, len + minBestLenTillIdx[l-1]);
-
-                }
-
-                bestMinLen = min(bestMinLen, len);
-            }
-            minBestLenTillIdx[r] = bestMinLen;
+            
+            j++;
         }
         
-    return ans == INT_MAX ? -1 : ans;
+        return maxV;
+    }
+};
 
+
+//Sliding Window - Writing a lambda function to check vowel
+class Solution {
+public:
+    
+    int maxVowels(string s, int k) {
+        
+        auto isVowel = [&](char ch) {
+            return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+        };
+        
+        int n = s.length();
+        
+        int maxV  = 0;
+        int count = 0;
+        int i = 0, j = 0;
+        
+        while(j < n) {
+            
+            if(isVowel(s[j]))
+                count++;
+            
+            if(j-i+1 == k) {
+                maxV = max(maxV, count);
+                if(isVowel(s[i]))
+                    count--;
+                i++;
+            }
+            
+            j++;
+        }
+        
+        return maxV;
     }
 };

@@ -1,3 +1,31 @@
+// slidign window
+class Solution {
+public:
+    int maxVowels(string s, int k) {
+        int n = s.length();
+        int l=0;
+        auto isVowel = [&](char& c) {
+            return c == 'a' or c == 'e' or c == 'i' or c == 'o' or c == 'u' ;
+        };
+
+        int ans = 0;
+        int cntV = 0;
+        for(int r=0; r<n; r++) {
+
+            cntV += (isVowel(s[r]));
+
+            if(r - l + 1 > k) {
+                cntV -= (isVowel(s[l]));
+                l++;
+            }
+
+            ans = max(ans, cntV);
+        }
+
+        return ans;
+    }
+};
+
 // without queue
 class Solution {
 public:
